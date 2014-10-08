@@ -4,6 +4,7 @@ class JoinPart
   include Cinch::Plugin
   
   match /join (.+)/, method: :join
+  match /part( (.+))?/, method: :part
   
   set :prefix, lambda{ |m| Regexp.new("^" + Regexp.escape(m.bot.nick + ": " ))}
   
@@ -18,6 +19,15 @@ class JoinPart
       return
     end
     Channel(channel).join
+  end
+  
+  def part(m, channel)
+    unless check_user(m.user)
+      talk_back(m)
+      return
+    end
+    channel ||= m.channel
+    Channel(channel).part
   end
   
   def talk_back(m)
