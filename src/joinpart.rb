@@ -5,6 +5,8 @@ class JoinPart
   
   match /join (.+)/, method: :join
   match /part( (.+))?/, method: :part
+  match /begone/, method: :part
+  match /leave/, method: :part
   
   set :prefix, lambda{ |m| Regexp.new("^" + Regexp.escape(m.bot.nick + ": " ))}
   
