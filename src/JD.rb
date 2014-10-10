@@ -3,14 +3,18 @@ class JD
   include Cinch::Plugin
   
   match /JD +([0-9]+(\.[0.9]+)?)/, method: :JDtoDate
-  #match /JD( [0-9]+.[0-9]+.[0.9]+)?/, method :DatetoJD
+  match /JD( *\n| [0-9]+[\.\-][0-9]+[\.\-][0-9]+)/, method: :DatetoJD
+  
+  def DatetoJD(m, date_string)
+    my_match = /([0-9]+)[\.\-]([0-9]+)[\.\-]([0-9]+)/.match(date_string)
+    puts my_math.captures
+    day = my_match[1].to_i
+    month = my_match[2].to_i
+    year = my_match[3].to_i
+  end
   
   def JDtoDate(m, jd_string)
     s = m.user.nick
-    unless jd_string
-      m.channel.msg("#{s}: I didn't understand your number.")
-      return
-    end
     j = jd_string.to_f - 0.25
     f = j + 1401 + ((4*j+274277).div(146097)*3).div(4) - 38
     e = 4*f + 3
