@@ -2,6 +2,7 @@
 require "cinch"
 
 require_relative "joinpart"
+require_relative "whatis"
 
 SERVER = ARGV[0]
 
@@ -11,7 +12,7 @@ drobot = Cinch::Bot.new do
     c.nick = "Drobot"
     c.server = SERVER
     c.channels = ["#asdfoj"]
-    c.plugins.plugins = [JoinPart]
+    c.plugins.plugins = [JoinPart, WhatIs]
   end
 end
 
