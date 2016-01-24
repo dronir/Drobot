@@ -2,8 +2,8 @@
 class JD
   include Cinch::Plugin
   
-  match /JD +([0-9]+(\.[0.9]+)?)/, method: :JDtoDate
-  match /JD( *\n| [0-9]+[\.\-][0-9]+[\.\-][0-9]+)/, method: :DatetoJD
+  match /JD +([0-9]+(\.[0-9]+)?[\W]*)/, method: :JDtoDate
+  match /JD ([0-9]+\-[0-9]+\-[0-9]+)/, method: :DatetoJD
   
   def DatetoJD(m, date_string)
     my_match = /([0-9]+)[\.\-]([0-9]+)[\.\-]([0-9]+)/.match(date_string)
@@ -11,6 +11,10 @@ class JD
     day = my_match[1].to_i
     month = my_match[2].to_i
     year = my_match[3].to_i
+    a = ((14-month)/12.0).floor
+    y = year + 4800.0 - a
+    m = month + 12*a - 3.0
+    j = day + ((153*m+2)/5).floor + 365*y + (y/4).floor - (y/100).floor + (y/400).floor - 32045
   end
   
   def JDtoDate(m, jd_string)
