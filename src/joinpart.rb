@@ -7,6 +7,7 @@ class JoinPart
   match /part( (.+))?/, method: :part
   match /begone/, method: :part
   match /leave/, method: :part
+  match /quit/, method: :quit_irc
   
   set :prefix, lambda{ |m| Regexp.new("^" + Regexp.escape(m.bot.nick + ": " ))}
   
@@ -36,4 +37,10 @@ class JoinPart
     s = m.user.nick
     m.channel.msg("#{s}: Don't tell me what to do.")
   end
+  
+
+  def quit_irc(m)
+    bot.quit("Bye then.")
+  end
+  
 end

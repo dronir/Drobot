@@ -3,6 +3,8 @@ class JD
   include Cinch::Plugin
   require "date"
   
+  set :prefix, lambda{ |m| Regexp.new("^" + Regexp.escape(m.bot.nick + ": " ))}
+  
   # JD to date regex
   match /JD +([0-9]+(\.[0-9]+)?[\W]*$)/, method: :JDtoDate
   

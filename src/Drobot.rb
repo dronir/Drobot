@@ -3,6 +3,7 @@ require "cinch"
 
 require_relative "joinpart"
 require_relative "JD"
+require_relative "whatis"
 
 SERVER = ARGV[0]
 
@@ -12,8 +13,8 @@ drobot = Cinch::Bot.new do
     c.nick = "Drobot"
     c.server = SERVER
     c.channels = ["#asdfoj"]
-    c.plugins.plugins = [JoinPart, JD]
-    c.plugins.prefix = lambda{ |m| Regexp.new("^" + Regexp.escape(m.bot.nick + ": " ))}
+    c.plugins.plugins = [JoinPart, WhatIs, JD]
+    c.whatis_db_path = "test.db"
   end
 end
 
