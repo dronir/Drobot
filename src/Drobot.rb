@@ -13,6 +13,7 @@ drobot = Cinch::Bot.new do
     c.server = SERVER
     c.channels = ["#asdfoj"]
     c.plugins.plugins = [JoinPart, WhatIs]
+    c.whatis_db_path = "test.db"
   end
 end
 
