@@ -33,9 +33,8 @@ class WhatIs
     synchronize(:define_db_access) do
       user = event.user.nick
       begin
-        stm = @db.prepare "SELECT * FROM entries WHERE key = ?"
-        stm.bind_param 1, query
-        rs = stm.execute
+        stm = @db.prepare "SELECT * FROM entries WHERE key = :query"
+        rs = stm.execute query
         i = 0
         rs.each do |row|
           i += 1
@@ -54,14 +53,9 @@ class WhatIs
   def definition(event, key, value)
     synchronize(:define_db_access) do
       user = event.user.nick
-      timestamp = DateTime.now.strftime("%d-%m-%Y %H:%M:%S.%3N")
       begin
-        stm = @db.prepare "insert into entries (key, definition, definer) values (?, ?, ?)"
-        stm.bind_param 1, key
-        stm.bind_param 2, value
-        stm.bind_param 3, user
-        stm.execute
-      
+        stm = @db.prepare "insert into entries (key, definition, definer) values (:key, :value, :user)"
+        stm.execute key, value, user      
         event.channel.msg("#{user}: Definition added.")
       rescue SQLite3::Exception => e
         event.channel.msg("#{user}: Something went wrong.")
