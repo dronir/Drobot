@@ -10,3 +10,5 @@ the `cinch` bot building framework.
 - The owner (hardcoded to *!dronir@kapsi.fi) can order the bot to join a channel
   with by addressing it like "Drobot: join #foo" and part a channel by saying
   "Drobot: part [#foo]", where the channel name is optional (defaults to current channel).
+- The bot can convert JD day numbers into Gregorian dates and vice versa.
+- The bot can maintain a definitions database.
