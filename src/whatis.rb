@@ -49,6 +49,7 @@ class WhatIs
     end
   end
   
+#  TODO: TEST NOTICE CAPABILITY
 
   def definition(event, key, value)
     synchronize(:define_db_access) do
@@ -56,9 +57,9 @@ class WhatIs
       begin
         stm = @db.prepare "insert into entries (key, definition, definer) values (:key, :value, :user)"
         stm.execute key, value, user      
-        event.channel.msg("#{user}: Definition added.")
+        event.user.notice("Definition added.")
       rescue SQLite3::Exception => e
-        event.channel.msg("#{user}: Something went wrong.")
+        event.user.notice("Something went wrong.")
         puts "Something went wrong: #{user}: #{key} = #{value}"
         puts e
       end
