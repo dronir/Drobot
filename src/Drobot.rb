@@ -12,6 +12,8 @@ CONFIG = TOML.load_file("config.toml")
 drobot = Cinch::Bot.new do
   configure do |c|
     c.nick = CONFIG["nick"]
+    c.user = CONFIG["username"]
+    c.realname = CONFIG["realname"]
     c.server = CONFIG["server"]
     c.channels = CONFIG["channels"]
     c.plugins.plugins = [JoinPart, WhatIs, JD]
