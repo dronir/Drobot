@@ -27,6 +27,9 @@ class WhatIs
   
   # Regex for whodef
   match /!whodef\s+(\w+)\s+([0-9]+)/, method: :whodef
+  
+  # Regex for dick
+  match /!?dick\s+([^S]+)/, method: :dick
     
   def whatis_query(event, sufx, query)
     synchronize(:define_db_access) do
@@ -36,7 +39,18 @@ class WhatIs
         stm = @db.prepare "SELECT * FROM entries WHERE key = :query"
         rs = stm.execute query
         i = 0
-        rs.each do |row|
+        
+        all_rows = []
+        rs.each do 
+          |row| all_rows << row 
+        end
+        
+        if all_rows.length > 10
+          event.channel.msg("#{user}: Too many definitions: see http://dronir.xyz/whatis/#{query}")
+          return
+        end
+        
+        all_rows.each do |row|
           i += 1
           key = row["key"]
           value = row["definition"]
@@ -65,7 +79,52 @@ class WhatIs
     end    
   end
   
-  def whodef(event, key, index)
+  def whodef(event, query, index)
+    index = index.to_i
+    return unless index >= 1
+    synchronize(:define_db_access) do
+      user = event.user.nick
+      query = query.downcase
+      begin
+        stm = @db.prepare "SELECT * FROM entries WHERE key = :query"
+        rs = stm.execute query
+        i = 0
+        
+        all_rows = []
+        rs.each do 
+          |row| all_rows << row 
+        end
+        
+        if index > all_rows.length
+          event.channel.msg("#{user}: '#{query}' only has #{all_rows.length} definitions.")
+          return
+        end
+        
+        who = all_rows[index]["definer"]
+        time = all_rows[index]["timestamp"]
+        
+        event.channel.msg("#{user}: #{who} at #{time}.")
+      end
+    end
+  end
+  
+  def dick(event, query)
+    synchronize(:define_db_access) do
+      user = event.user.nick
+      query = query.downcase
+      begin
+        stm = @db.prepare "SELECT * FROM entries WHERE key = :query"
+        rs = stm.execute query
+        i = 0
+        
+        all_rows = []
+        rs.each do 
+          |row| all_rows << row 
+        end
+        
+        event.channel.msg("#{user}: '#{query}' has #{all_rows.length} definitions.")
+      end
+    end
   end
   
 end
