@@ -23,7 +23,7 @@ class WhatIs
   match /(w|!whatis)?\s+([^S]+)/, method: :whatis_query
   
   # Regex for definition
-  match /!define ([\S]+)\s+(.+)/, method: :definition
+  match /!define\s+([\S]+)\s+(.+)/, method: :definition
   
   # Regex for whodef
   match /!whodef\s+(\w+)\s+([0-9]+)/, method: :whodef
