@@ -20,18 +20,18 @@ class WhatIs
   set :prefix, /^/
 
   # Regex for whatis query
-  match /(w|!whatis)?\s+([^S]+)/, method: :whatis_query
+  match /(!?w|!whatis|!wtf)\s+([^S]+)/, method: :whatis_query
   
   # Regex for definition
   match /!define\s+([\S]+)\s+(.+)/, method: :definition
   
   # Regex for whodef
   match /!whodef\s+(\w+)\s+([0-9]+)/, method: :whodef
-  
-  
+    
   def whatis_query(event, sufx, query)
     synchronize(:define_db_access) do
       user = event.user.nick
+      query = query.downcase
       begin
         stm = @db.prepare "SELECT * FROM entries WHERE key = :query"
         rs = stm.execute query
@@ -49,12 +49,11 @@ class WhatIs
     end
   end
   
-#  TODO: TEST NOTICE CAPABILITY
-
   def definition(event, key, value)
     synchronize(:define_db_access) do
       user = event.user.nick
       begin
+        key = key.downcase
         stm = @db.prepare "insert into entries (key, definition, definer) values (:key, :value, :user)"
         stm.execute key, value, user      
         event.user.notice("Definition added.")
